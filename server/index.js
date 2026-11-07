@@ -358,40 +358,5 @@ app.get('*', (req, res) => {
 
 
 // ================= ONE-TIME ₹100 STRIPE CHECKOUT =================
-const handleOneTimeCheckout = async (req, res) => {
-  try {
-    if (!stripe) return res.status(500).json({ error: 'Stripe is not configured' });
-    const origin = req.headers.origin || 'https://breaktext-ai-production.up.railway.app';
-    const session = await stripe.checkout.sessions.create({
-      payment_method_types: ['card'],
-      mode: 'payment',
-      line_items: [{
-        price_data: {
-          currency: 'inr',
-          product_data: {
-            name: 'BreakText AI Pro (50,000 Words)',
-            description: 'One-time upgrade for 50,000 words & Turnitin bypass'
-          },
-          unit_amount: 10000 // ₹100.00 (in paise)
-        },
-        quantity: 1
-      }],
-      success_url: `${origin}/?success=true`,
-      cancel_url: `${origin}/?canceled=true`
-    });
-    res.json({ url: session.url });
-  } catch (err) {
-    console.error('Stripe session error:', err.message);
-    res.status(500).json({ error: err.message });
-  }
-};
 
-app.post('/api/create-checkout-session', handleOneTimeCheckout);
-app.post('/api/checkout', handleOneTimeCheckout);
-// =================================================================
 
-app.listen(PORT, () => {
-  console.log(`==================================================`);
-  console.log(` BreakText AI Server running on http://localhost:${PORT}`);
-  console.log(`==================================================`);
-});
