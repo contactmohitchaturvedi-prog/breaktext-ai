@@ -14,6 +14,82 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
-  </body>
+  
+<script>
+// ================= DUAL PAYMENT HANDLERS =================
+async function payWithStripe() {
+  try {
+    const res = await fetch('/api/create-checkout-session', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ plan: 'pro' })
+    });
+    const data = await res.json();
+    if (data.url) {
+      window.location.href = data.url;
+    } else {
+      alert(data.error || 'Failed to initialize Stripe checkout.');
+    }
+  } catch (err) {
+    alert('Error connecting to Stripe: ' + err.message);
+  }
+}
+
+async function payWithRazorpay() {
+  try {
+    // 1. Create order on server
+    const res = await fetch('/api/razorpay/create-order', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ amount: 999 })
+    });
+    const order = await res.json();
+
+    if (!order.id) {
+      alert('Could not initiate Razorpay order. Make sure RAZORPAY_KEY_ID is set in Railway.');
+      return;
+    }
+
+    // 2. Open Razorpay Checkout modal
+    const options = {
+      key: window.RAZORPAY_KEY_ID || order.key || 'rzp_test_placeholder',
+      amount: order.amount,
+      currency: "INR",
+      name: "BreakText AI",
+      description: "Pro Upgrade (50,000 Words)",
+      order_id: order.id,
+      handler: async function (response) {
+        // 3. Verify signature on backend
+        const verifyRes = await fetch('/api/razorpay/verify-payment', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(response)
+        });
+        const verifyData = await verifyRes.json();
+        if (verifyData.success) {
+          alert('Payment Successful! Your account has been upgraded to Pro.');
+          window.location.reload();
+        } else {
+          alert('Payment verification failed.');
+        }
+      },
+      prefill: {
+        name: "BreakText User",
+        email: "user@example.com"
+      },
+      theme: { color: "#6366f1" }
+    };
+
+    const rzp = new Razorpay(options);
+    rzp.open();
+  } catch (err) {
+    alert('Razorpay Checkout error: ' + err.message);
+  }
+}
+window.payWithStripe = payWithStripe;
+window.payWithRazorpay = payWithRazorpay;
+</script>
+
+</body>
 </html>
 
