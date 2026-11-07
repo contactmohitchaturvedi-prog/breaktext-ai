@@ -1,4 +1,3 @@
-
 // Process Crash Guards (Keeps server alive under edge-case unhandled errors)
 process.on('uncaughtException', (err) => {
   console.error('[UNCAUGHT EXCEPTION]:', err.message);
@@ -92,6 +91,7 @@ import 'dotenv/config';
 
 
 const app = express();
+const PORT = process.env.PORT || 5000;
 
 const JWT_SECRET = process.env.JWT_SECRET || 'breaktext-dev-secret-key';
 const openai = new OpenAI({ 
@@ -370,7 +370,8 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Serve static React production build
-// System & Diligence Health Endpoint (Evaluated before static catch-all)
+
+// System & Diligence Health Endpoint
 app.get('/api/health', (req, res) => {
   try {
     const dbCheck = db.prepare('SELECT 1 as healthy').get();
@@ -429,25 +430,9 @@ app.post('/api/create-checkout-session', handleOneTimeCheckout);
 app.post('/api/checkout', handleOneTimeCheckout);
 // =================================================================
 
-const PORT = process.env.PORT || 5000;
 
-const PORT = process.env.PORT || 5000;
 
 // Automated Health & Diligence Verification Route
-app.get('/api/health', (req, res) => {
-  try {
-    const dbCheck = db.prepare('SELECT 1 as healthy').get();
-    res.json({
-      status: 'healthy',
-      uptime: process.uptime(),
-      timestamp: new Date().toISOString(),
-      database: dbCheck.healthy === 1 ? 'connected (WAL mode active)' : 'error',
-      environment: process.env.NODE_ENV || 'production'
-    });
-  } catch (err) {
-    res.status(500).json({ status: 'unhealthy', error: err.message });
-  }
-});
 
 app.listen(PORT, '0.0.0.0', () => {
   console.log('BreakText AI Server running on http://0.0.0.0:' + PORT);
