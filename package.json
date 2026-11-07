@@ -5,7 +5,7 @@
   "scripts": {
     "server": "node server/index.js",
     "client": "npm --prefix client run dev",
-    "build": "npm --prefix client run build",
+    "build": "npm install --prefix client && npm run build --prefix client",
     "start": "node server/index.js"
   },
   "dependencies": {
