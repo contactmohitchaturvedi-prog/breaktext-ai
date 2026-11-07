@@ -19,8 +19,8 @@ export async function createCheckoutSession(userId, userEmail) {
         },
       quantity: 1
     }],
-    success_url: `${process.env.APP_URL || 'http://localhost:5173'}?session_id={CHECKOUT_SESSION_ID}`,
-    cancel_url: `${process.env.APP_URL || 'http://localhost:5173'}`,
+    success_url: `${process.env.APP_URL || 'https://breaktext-ai-production.up.railway.app'}?session_id={CHECKOUT_SESSION_ID}`,
+    cancel_url: `${process.env.APP_URL || 'https://breaktext-ai-production.up.railway.app'}`,
     metadata: { userId: userId.toString() }
   });
   return session.url;
@@ -32,7 +32,7 @@ export async function verifyAndUpgradeSession(sessionId) {
     if ((session.payment_status === 'paid' || session.status === 'complete') && session.metadata?.userId) {
       db.prepare(`
         UPDATE users 
-        SET tier = 'pro', words_limit = 50000, stripe_customer_id = ? 
+        SET tier = 'pro', words_limit = COALESCE(words_limit, 1500) + 50000, stripe_customer_id = ? 
         WHERE id = ?
       `).run(session.customer ? session.customer.toString() : 'cus_test', session.metadata.userId);
       return true;
@@ -50,7 +50,7 @@ export function handleWebhook(event) {
     if (userId) {
       db.prepare(`
         UPDATE users 
-        SET tier = 'pro', words_limit = 50000, stripe_customer_id = ? 
+        SET tier = 'pro', words_limit = COALESCE(words_limit, 1500) + 50000, stripe_customer_id = ? 
         WHERE id = ?
       `).run(session.customer ? session.customer.toString() : 'cus_test', userId);
     }
