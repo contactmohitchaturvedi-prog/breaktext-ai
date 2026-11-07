@@ -6,6 +6,7 @@ import AdminView from './components/AdminView.jsx';
 import EmbedModal from './components/EmbedModal.jsx';
 
 export default function App() {
+  const [activeLegalTab, setActiveLegalTab] = useState(null);
   const [token, setToken] = useState(localStorage.getItem('bt_token') || '');
   const [user, setUser] = useState(null);
   const [view, setView] = useState('studio');
@@ -229,6 +230,87 @@ export default function App() {
       </main>
 
       {showEmbed && <EmbedModal onClose={() => setShowEmbed(false)} />}
+    
+      {/* Global Footer */}
+      <footer className="mt-16 py-8 border-t border-slate-800/80 text-center text-xs text-slate-500">
+        <div className="flex flex-wrap justify-center gap-6 mb-2">
+          <button onClick={() => setActiveLegalTab('terms')} className="hover:text-slate-300 underline underline-offset-4">Terms of Service</button>
+          <button onClick={() => setActiveLegalTab('privacy')} className="hover:text-slate-300 underline underline-offset-4">Privacy Policy</button>
+          <button onClick={() => setActiveLegalTab('refund')} className="hover:text-slate-300 underline underline-offset-4">Refund & Cancellation</button>
+        </div>
+        <p className="text-[11px] text-slate-600">© 2026 BreakText AI. All rights reserved. Built for secure editorial drafting.</p>
+      </footer>
+
+      {/* ================= COMPLIANCE & LEGAL CENTER MODAL ================= */}
+      {activeLegalTab && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 overflow-y-auto">
+          <div className="bg-slate-900 border border-slate-800 rounded-2xl max-w-2xl w-full p-6 text-slate-300 shadow-2xl relative my-8 max-h-[85vh] flex flex-col">
+            
+            {/* Header */}
+            <div className="flex items-center justify-between pb-4 border-b border-slate-800">
+              <div className="flex gap-2">
+                <button 
+                  onClick={() => setActiveLegalTab('terms')} 
+                  className={"px-3 py-1.5 rounded-lg text-xs font-semibold transition " + (activeLegalTab === 'terms' ? "bg-indigo-600 text-white" : "bg-slate-800 text-slate-400 hover:text-white")}
+                >
+                  Terms of Service
+                </button>
+                <button 
+                  onClick={() => setActiveLegalTab('privacy')} 
+                  className={"px-3 py-1.5 rounded-lg text-xs font-semibold transition " + (activeLegalTab === 'privacy' ? "bg-indigo-600 text-white" : "bg-slate-800 text-slate-400 hover:text-white")}
+                >
+                  Privacy Policy
+                </button>
+                <button 
+                  onClick={() => setActiveLegalTab('refund')} 
+                  className={"px-3 py-1.5 rounded-lg text-xs font-semibold transition " + (activeLegalTab === 'refund' ? "bg-indigo-600 text-white" : "bg-slate-800 text-slate-400 hover:text-white")}
+                >
+                  Refund Policy
+                </button>
+              </div>
+              <button onClick={() => setActiveLegalTab(null)} className="text-slate-400 hover:text-white text-xl px-2 font-bold">✕</button>
+            </div>
+
+            {/* Modal Content */}
+            <div className="overflow-y-auto py-4 space-y-4 text-xs leading-relaxed text-slate-300 pr-1">
+              {activeLegalTab === 'terms' && (
+                <div>
+                  <h3 className="text-sm font-bold text-white mb-2">Terms of Service & Safe-Harbor Agreement</h3>
+                  <p className="mb-2"><strong className="text-white">1. Permitted Use:</strong> BreakText AI operates strictly as an editorial enhancement, syntax restructuring, and stylistic rewriting assistant. The service is provided to assist authors, researchers, and creators in improving draft clarity, vocabulary variance, and readability.</p>
+                  <p className="mb-2"><strong className="text-white">2. User Representation & Academic Honor Codes:</strong> By utilizing this service, users represent and warrant that all submitted text is their original intellectual property or that they hold express authorization for processing. Users agree never to use BreakText AI to commit academic fraud, breach institutional honor codes, or infringe third-party copyrights.</p>
+                  <p className="mb-2"><strong className="text-white">3. Third-Party Trademarks:</strong> Turnitin, GPTZero, CopyLeaks, and other detector brand names referenced are registered trademarks of their respective owners. BreakText AI is an independent software tool and has no affiliation, sponsorship, or endorsement from any third-party detector service.</p>
+                  <p className="mb-2"><strong className="text-white">4. Limitation of Liability:</strong> BreakText AI does not guarantee specific empirical detector scores or academic outcomes. Detection algorithms operate probabilistically and undergo frequent heuristic adjustments. Under no circumstances shall BreakText AI or its owners be liable for disciplinary actions, lost grades, or indirect damages.</p>
+                </div>
+              )}
+
+              {activeLegalTab === 'privacy' && (
+                <div>
+                  <h3 className="text-sm font-bold text-white mb-2">Privacy & Zero-Retention Policy</h3>
+                  <p className="mb-2"><strong className="text-white">1. Real-Time Ephemeral Processing:</strong> Your drafts belong entirely to you. Text submitted for humanization is processed in real time through encrypted stateless API connections. We do not index, sell, or permanently store submitted documents.</p>
+                  <p className="mb-2"><strong className="text-white">2. No Model Training:</strong> User input and humanized output are strictly barred from being used to train, fine-tune, or calibrate public AI or machine-learning models.</p>
+                  <p className="mb-2"><strong className="text-white">3. Secure Payment Credentials:</strong> BreakText AI never accesses, collects, or stores raw payment card numbers or banking secrets. All monetary transactions are processed directly by PCI-DSS Level 1 certified payment partners (Stripe and Razorpay).</p>
+                </div>
+              )}
+
+              {activeLegalTab === 'refund' && (
+                <div>
+                  <h3 className="text-sm font-bold text-white mb-2">Refund & Cancellation Policy</h3>
+                  <p className="mb-2"><strong className="text-white">1. Digital Micro-Transaction Consumption:</strong> BreakText AI services are fulfilled as one-time, immediate allocations of compute resources and word credits (e.g. ₹100 top-up for 50,000 words). Because digital credits are provisioned and usable instantly upon checkout completion, purchases are strictly non-refundable once the allocation has been granted.</p>
+                  <p className="mb-2"><strong className="text-white">2. Technical Non-Delivery:</strong> In the event of a verified gateway glitch where payment was captured but word credits were not provisioned within 12 hours, customers are entitled to an immediate credit adjustment or a full charge reversal upon providing payment receipt details to support.</p>
+                  <p className="mb-2"><strong className="text-white">3. Dispute Prevention:</strong> Customers agree to contact internal technical support prior to initiating card scheme chargebacks to ensure rapid balance resolution.</p>
+                </div>
+              )}
+            </div>
+
+            {/* Footer */}
+            <div className="pt-3 border-t border-slate-800 flex justify-between items-center text-[11px] text-slate-500">
+              <span>Jurisdiction: Governed under standard applicable commercial laws.</span>
+              <button onClick={() => setActiveLegalTab(null)} className="px-4 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg font-medium text-xs">I Understand</button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }
