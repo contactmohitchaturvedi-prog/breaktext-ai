@@ -27,7 +27,7 @@ export default function App() {
         .then(data => {
           if (data.user) {
             setUser(data.user);
-            alert('🎉 Payment verified! Upgraded to BreakText Pro (50,000 words/mo).');
+            alert('🎉 Payment verified! Upgraded to BreakText Pro (50,000 words).');
             window.history.replaceState({}, document.title, window.location.pathname);
           }
         });
