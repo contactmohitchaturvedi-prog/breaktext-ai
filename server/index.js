@@ -1,4 +1,3 @@
-﻿
 // Free offline keyword-based RAG matching (No external embeddings API needed)
 function findOfflineMatches(query, documents, topK = 3) {
   if (!documents || documents.length === 0) return [];
@@ -69,7 +68,7 @@ import { createEmbedding, queryRelevantContext } from './rag.js';
 import { createCheckoutSession, handleWebhook, verifyAndUpgradeSession } from './stripe.js';
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+
 const JWT_SECRET = process.env.JWT_SECRET || 'breaktext-dev-secret-key';
 const openai = new OpenAI({ 
   apiKey: process.env.OPENAI_API_KEY || 'sk-placeholder' 
@@ -390,9 +389,14 @@ app.post('/api/create-checkout-session', handleOneTimeCheckout);
 app.post('/api/checkout', handleOneTimeCheckout);
 // =================================================================
 
-app.listen(process.env.PORT || PORT, "0.0.0.0", () => {
+ => {
   console.log(`==================================================`);
   console.log(` BreakText AI Server running on http://localhost:${PORT}`);
   console.log(`==================================================`);
 });
 
+
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, '0.0.0.0', () => {
+  console.log('BreakText AI Server running on http://0.0.0.0:' + PORT);
+});
