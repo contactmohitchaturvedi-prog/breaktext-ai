@@ -1,10 +1,20 @@
+
+import fs from 'fs';
+import path from 'path';
+
+const storageDir = process.env.DATA_DIR || (process.env.NODE_ENV === 'production' ? '/app/data' : path.resolve('.'));
+if (!fs.existsSync(storageDir)) {
+  fs.mkdirSync(storageDir, { recursive: true });
+}
+const DB_PATH = path.join(storageDir, 'breaktext.db');
+
 import { DatabaseSync } from 'node:sqlite';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const sqlite = new DatabaseSync(path.join(__dirname, 'breaktext.db'));
+const sqlite = new DatabaseSync(path.join(__dirname, DB_PATH));
 
 const db = {
   exec: (sql) => sqlite.exec(sql),
