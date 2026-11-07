@@ -9,12 +9,12 @@ if (!fs.existsSync(storageDir)) {
 const DB_PATH = path.join(storageDir, 'breaktext.db');
 
 import { DatabaseSync } from 'node:sqlite';
-import path from 'path';
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const sqlite = new DatabaseSync(path.join(__dirname, DB_PATH));
+if (!fs.existsSync(path.dirname(DB_PATH))) { fs.mkdirSync(path.dirname(DB_PATH), { recursive: true }); }
+const sqlite = new DatabaseSync(DB_PATH);
 
 const db = {
   exec: (sql) => sqlite.exec(sql),
