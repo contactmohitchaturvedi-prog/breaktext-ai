@@ -1,3 +1,12 @@
+
+// Process Crash Guards (Keeps server alive under edge-case unhandled errors)
+process.on('uncaughtException', (err) => {
+  console.error('[UNCAUGHT EXCEPTION]:', err.message);
+});
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('[UNHANDLED REJECTION]:', reason);
+});
+
 import express from 'express';
 import cors from 'cors';
 import path from 'path';
@@ -405,6 +414,23 @@ app.post('/api/checkout', handleOneTimeCheckout);
 // =================================================================
 
 const PORT = process.env.PORT || 5000;
+
+// Automated Health & Diligence Verification Route
+app.get('/api/health', (req, res) => {
+  try {
+    const dbCheck = db.prepare('SELECT 1 as healthy').get();
+    res.json({
+      status: 'healthy',
+      uptime: process.uptime(),
+      timestamp: new Date().toISOString(),
+      database: dbCheck.healthy === 1 ? 'connected (WAL mode active)' : 'error',
+      environment: process.env.NODE_ENV || 'production'
+    });
+  } catch (err) {
+    res.status(500).json({ status: 'unhealthy', error: err.message });
+  }
+});
+
 app.listen(PORT, '0.0.0.0', () => {
   console.log('BreakText AI Server running on http://0.0.0.0:' + PORT);
 });

@@ -27,6 +27,17 @@ const __dirname = path.dirname(__filename);
 if (!fs.existsSync(path.dirname(DB_PATH))) { fs.mkdirSync(path.dirname(DB_PATH), { recursive: true }); }
 const sqlite = new DatabaseSync(DB_PATH);
 
+// Production Performance & Concurrency Hardening
+try {
+  sqlite.exec("PRAGMA journal_mode = WAL;");
+  sqlite.exec("PRAGMA synchronous = NORMAL;");
+  sqlite.exec("PRAGMA busy_timeout = 5000;");
+  console.log('✓ SQLite hardened with WAL mode and 5000ms busy timeout');
+} catch (e) {
+  console.warn('Could not set WAL pragma:', e.message);
+}
+
+
 const db = {
   exec: (sql) => sqlite.exec(sql),
   prepare: (sql) => {
