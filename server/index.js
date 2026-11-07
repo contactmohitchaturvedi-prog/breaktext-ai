@@ -1,4 +1,22 @@
 
+// Free offline keyword-based RAG matching (No external embeddings API needed)
+function findOfflineMatches(query, documents, topK = 3) {
+  if (!documents || documents.length === 0) return [];
+  const queryTerms = query.toLowerCase().split(/W+/).filter(w => w.length > 3);
+
+  const scored = documents.map(doc => {
+    const text = (doc.content || doc.text || '').toLowerCase();
+    let score = 0;
+    for (const term of queryTerms) {
+      if (text.includes(term)) score += 1;
+    }
+    return { ...doc, score };
+  });
+
+  return scored.sort((a, b) => b.score - a.score).slice(0, topK);
+}
+
+
 import rateLimit from 'express-rate-limit';
 
 const apiLimiter = rateLimit({
