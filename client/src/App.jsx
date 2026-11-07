@@ -13,7 +13,7 @@ export default function App() {
   const [showEmbed, setShowEmbed] = useState(false);
   const [authEmail, setAuthEmail] = useState('');
   const [authPassword, setAuthPassword] = useState('');
-  const [authMode, setAuthMode] = useState('register');
+  
 
   
   useEffect(() => {
