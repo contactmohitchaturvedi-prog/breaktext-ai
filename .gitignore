@@ -7,3 +7,5 @@ setup-*.js
 patch-*.js
 fix.js
 test-*.js
+
+breaktext.db
