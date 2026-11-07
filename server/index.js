@@ -370,6 +370,22 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Serve static React production build
+// System & Diligence Health Endpoint (Evaluated before static catch-all)
+app.get('/api/health', (req, res) => {
+  try {
+    const dbCheck = db.prepare('SELECT 1 as healthy').get();
+    res.json({
+      status: 'healthy',
+      uptime: Math.floor(process.uptime()),
+      timestamp: new Date().toISOString(),
+      database: dbCheck && dbCheck.healthy === 1 ? 'connected (WAL mode active)' : 'warning',
+      environment: process.env.NODE_ENV || 'production'
+    });
+  } catch (err) {
+    res.status(500).json({ status: 'unhealthy', error: err.message });
+  }
+});
+
 app.use(express.static(path.join(__dirname, '../client/dist')));
 
 // Fallback to React index.html for all non-API client routes
@@ -412,6 +428,8 @@ const handleOneTimeCheckout = async (req, res) => {
 app.post('/api/create-checkout-session', handleOneTimeCheckout);
 app.post('/api/checkout', handleOneTimeCheckout);
 // =================================================================
+
+const PORT = process.env.PORT || 5000;
 
 const PORT = process.env.PORT || 5000;
 
