@@ -1,3 +1,18 @@
+import express from 'express';
+import cors from 'cors';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import crypto from 'crypto';
+import Razorpay from 'razorpay';
+import rateLimit from 'express-rate-limit';
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import OpenAI from 'openai';
+import db from './db.js';
+import { DEFAULT_HUMANIZER_SYSTEM_PROMPT, EMOTION_PRESETS } from './prompts.js';
+import { createEmbedding, queryRelevantContext } from './rag.js';
+import { createCheckoutSession, handleWebhook, verifyAndUpgradeSession } from './stripe.js';
+
 // Free offline keyword-based RAG matching (No external embeddings API needed)
 function findOfflineMatches(query, documents, topK = 3) {
   if (!documents || documents.length === 0) return [];
@@ -16,7 +31,7 @@ function findOfflineMatches(query, documents, topK = 3) {
 }
 
 
-import rateLimit from 'express-rate-limit';
+
 
 const apiLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
@@ -56,16 +71,16 @@ function freeHumanize(text, mode = 'Academic') {
   return humanized;
 }
 
-ï»¿import 'dotenv/config';
-import express from 'express';
-import cors from 'cors';
-import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
-import OpenAI from 'openai';
-import db from './db.js';
-import { DEFAULT_HUMANIZER_SYSTEM_PROMPT, EMOTION_PRESETS } from './prompts.js';
-import { createEmbedding, queryRelevantContext } from './rag.js';
-import { createCheckoutSession, handleWebhook, verifyAndUpgradeSession } from './stripe.js';
+import 'dotenv/config';
+
+
+
+
+
+
+
+
+
 
 const app = express();
 
@@ -339,8 +354,8 @@ app.get('/api/admin/overview', authMiddleware, (req, res) => {
 });
 
 
-import path from 'path';
-import { fileURLToPath } from 'url';
+
+
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -388,13 +403,6 @@ const handleOneTimeCheckout = async (req, res) => {
 app.post('/api/create-checkout-session', handleOneTimeCheckout);
 app.post('/api/checkout', handleOneTimeCheckout);
 // =================================================================
-
- => {
-  console.log(`==================================================`);
-  console.log(` BreakText AI Server running on http://localhost:${PORT}`);
-  console.log(`==================================================`);
-});
-
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, '0.0.0.0', () => {
