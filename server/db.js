@@ -30,6 +30,7 @@ const sqlite = new DatabaseSync(DB_PATH);
 // Production Performance & Concurrency Hardening
 try {
   sqlite.exec("PRAGMA journal_mode = WAL;");
+  sqlite.exec("PRAGMA foreign_keys = ON;");
   sqlite.exec("PRAGMA synchronous = NORMAL;");
   sqlite.exec("PRAGMA busy_timeout = 5000;");
   console.log('✓ SQLite hardened with WAL mode and 5000ms busy timeout');
@@ -97,6 +98,13 @@ db.exec(`
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY(user_id) REFERENCES users(id)
   );
+
+  -- Buyer Optimization: High-performance query indexes
+
+  CREATE INDEX IF NOT EXISTS idx_conversations_user_id ON conversations(user_id);
+  CREATE INDEX IF NOT EXISTS idx_messages_conv_id ON messages(conversation_id);
+  CREATE INDEX IF NOT EXISTS idx_documents_user_id ON documents(user_id);
+
 `);
 
 export default db;
