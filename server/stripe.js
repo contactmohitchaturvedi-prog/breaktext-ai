@@ -6,18 +6,17 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || 'sk_test_placeholder'
 export async function createCheckoutSession(userId, userEmail) {
   const session = await stripe.checkout.sessions.create({
     payment_method_types: ['card'],
-    mode: 'subscription',
+    mode: 'payment',
     customer_email: userEmail,
     line_items: [{
       price_data: {
-        currency: 'usd',
+        currency: 'inr',
         product_data: {
-          name: 'BreakText Pro (Undetectable AI + RAG)',
-          description: 'Unlimited rewrites, full Turnitin bypass mode, and 50,000 words/mo.'
+          name: 'BreakText AI Pro (50,000 Words)',
+          description: 'One-time upgrade for 50,000 words & Turnitin bypass'
         },
-        unit_amount: 1200,
-        recurring: { interval: 'month' }
-      },
+        unit_amount: 10000,
+        },
       quantity: 1
     }],
     success_url: `${process.env.APP_URL || 'http://localhost:5173'}?session_id={CHECKOUT_SESSION_ID}`,

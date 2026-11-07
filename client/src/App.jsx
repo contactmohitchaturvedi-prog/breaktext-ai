@@ -205,7 +205,7 @@ export default function App() {
               onClick={handleUpgrade}
               className="px-3.5 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-semibold shadow-md shadow-blue-500/20 flex items-center gap-1.5"
             >
-              <CreditCard className="w-3.5 h-3.5" /> Upgrade $12/mo
+              <CreditCard className="w-3.5 h-3.5" /> Upgrade ₹100
             </button>
           ) : (
             <span className="px-2.5 py-1 bg-amber-100 text-amber-800 rounded-lg text-xs font-bold border border-amber-300">
