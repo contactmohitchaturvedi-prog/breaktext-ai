@@ -6,7 +6,18 @@ const storageDir = process.env.DATA_DIR || (process.env.NODE_ENV === 'production
 if (!fs.existsSync(storageDir)) {
   fs.mkdirSync(storageDir, { recursive: true });
 }
-const DB_PATH = path.join(storageDir, 'breaktext.db');
+const volumePath = process.env.DATABASE_PATH || (fs.existsSync('/data') ? '/data/breaktext.db' : (fs.existsSync('/app/data') ? '/app/data/breaktext.db' : 'database.sqlite'));
+const DB_PATH = volumePath;
+
+const dbDir = path.dirname(DB_PATH);
+if (dbDir && dbDir !== '.' && !fs.existsSync(dbDir)) {
+  try {
+    fs.mkdirSync(dbDir, { recursive: true });
+  } catch (e) {
+    console.error('Failed to create db dir:', e.message);
+  }
+}
+console.log('Using SQLite database at:', DB_PATH);
 
 import { DatabaseSync } from 'node:sqlite';
 import { fileURLToPath } from 'url';
