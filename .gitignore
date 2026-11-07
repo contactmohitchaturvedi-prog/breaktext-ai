@@ -1,0 +1,9 @@
+﻿node_modules
+client/node_modules
+.env
+client/dist
+server/breaktext.db
+setup-*.js
+patch-*.js
+fix.js
+test-*.js
