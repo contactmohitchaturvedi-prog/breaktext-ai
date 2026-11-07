@@ -16,6 +16,7 @@
     "express-rate-limit": "^8.7.3",
     "jsonwebtoken": "^9.0.2",
     "openai": "^4.85.4",
+    "razorpay": "^2.9.8",
     "stripe": "^17.7.0"
   }
 }
