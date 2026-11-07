@@ -1,4 +1,15 @@
 
+import rateLimit from 'express-rate-limit';
+
+const apiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many requests. Please wait a few minutes before trying again.' }
+});
+
+
 // Built-in free humanizer fallback (No API credits required)
 function freeHumanize(text, mode = 'Academic') {
   const transitions = {
