@@ -1,4 +1,4 @@
-
+﻿
 // Free offline keyword-based RAG matching (No external embeddings API needed)
 function findOfflineMatches(query, documents, topK = 3) {
   if (!documents || documents.length === 0) return [];
@@ -57,7 +57,7 @@ function freeHumanize(text, mode = 'Academic') {
   return humanized;
 }
 
-﻿import 'dotenv/config';
+ï»¿import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
 import bcrypt from 'bcryptjs';
@@ -357,7 +357,7 @@ app.get('*', (req, res) => {
 });
 
 
-// ================= ONE-TIME ₹100 STRIPE CHECKOUT =================
+// ================= ONE-TIME â‚¹100 STRIPE CHECKOUT =================
 const handleOneTimeCheckout = async (req, res) => {
   try {
     if (!stripe) return res.status(500).json({ error: 'Stripe is not configured' });
@@ -372,7 +372,7 @@ const handleOneTimeCheckout = async (req, res) => {
             name: 'BreakText AI Pro (50,000 Words)',
             description: 'One-time upgrade for 50,000 words & Turnitin bypass'
           },
-          unit_amount: 10000 // ₹100.00 (in paise)
+          unit_amount: 10000 // â‚¹100.00 (in paise)
         },
         quantity: 1
       }],
@@ -390,8 +390,9 @@ app.post('/api/create-checkout-session', handleOneTimeCheckout);
 app.post('/api/checkout', handleOneTimeCheckout);
 // =================================================================
 
-app.listen(PORT, () => {
+app.listen(process.env.PORT || PORT, "0.0.0.0", () => {
   console.log(`==================================================`);
   console.log(` BreakText AI Server running on http://localhost:${PORT}`);
   console.log(`==================================================`);
 });
+
